@@ -26,42 +26,44 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 
 // Data
-import getChartData from "layouts/dashboard/data/getChartData"
+import getDefaultChartData from "layouts/dashboard/data/chartData"
 import useVisitorData from "hook/useVisitorData";
 
 function Dashboard() {
-  const { data } = useVisitorData(2022)
-  const chartData = getChartData(data);
+  const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(2022, 11)
+  const defaultChartData = getDefaultChartData(totalVisitor);
+  const visitorPercent = Math.round(targetMonthVisitor / lastMonthVisitor * 100);
+  const description = `Year ${2022}`
+
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
+      <MDBox py={2}>
+        <Grid container spacing={2}>
+          <Grid item lg={5}>
+            <MDBox>
               <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
+                icon="leaderboard"
+                title="Montly Visitor"
+                count={targetMonthVisitor}
                 percentage={{
                   color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
+                  amount: `${visitorPercent}%`,
+                  label: "than last month",
                 }}
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
+          <Grid item lg={5}>
+            <MDBox>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
+                title="Montly Visitor"
+                count={targetMonthVisitor}
                 percentage={{
                   color: "success",
-                  amount: "+3%",
+                  amount: `${visitorPercent}%`,
                   label: "than last month",
                 }}
               />
@@ -75,9 +77,9 @@ function Dashboard() {
                 <DefaultLineChart
                   color="info"
                   title="Monthly Visitor"
-                  description="This Year"
+                  description={description}
                   date="campaign sent 2 days ago"
-                  chart={chartData}
+                  chart={defaultChartData}
                 />
               </MDBox>
             </Grid>
