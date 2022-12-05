@@ -29,12 +29,16 @@ import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 import getDefaultChartData from "layouts/dashboard/data/chartData"
 import useVisitorData from "hook/useVisitorData";
 
+import { getMonthStr, addComma } from "../../util/formatter"
+
 function Dashboard() {
-  const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(2022, 11)
+  const year = 2022
+  const month = 11
+  const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(year, month)
   const defaultChartData = getDefaultChartData(totalVisitor);
   const visitorPercent = Math.round(targetMonthVisitor / lastMonthVisitor * 100);
-  const description = `Year ${2022}`
-
+  const description = `Year ${year}`
+  const monthTitle = `"${getMonthStr(month)}" Visitors`
 
   return (
     <DashboardLayout>
@@ -45,8 +49,8 @@ function Dashboard() {
             <MDBox>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Montly Visitor"
-                count={targetMonthVisitor}
+                title={monthTitle}
+                count={addComma(targetMonthVisitor)}
                 percentage={{
                   color: "success",
                   amount: `${visitorPercent}%`,
@@ -59,8 +63,8 @@ function Dashboard() {
             <MDBox>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Montly Visitor"
-                count={targetMonthVisitor}
+                title={monthTitle}
+                count={addComma(targetMonthVisitor)}
                 percentage={{
                   color: "success",
                   amount: `${visitorPercent}%`,
@@ -76,7 +80,7 @@ function Dashboard() {
               <MDBox>
                 <DefaultLineChart
                   color="info"
-                  title="Monthly Visitor"
+                  title="Monthly Visitors"
                   description={description}
                   date="campaign sent 2 days ago"
                   chart={defaultChartData}
