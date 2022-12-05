@@ -77,7 +77,6 @@ function Dashboard() {
         <Grid container spacing={2}>
           <Grid item lg={5}>
             <MDBox>
-              {console.log(targetMonthNewUser)}
               {targetMonthNewUser !== undefined && <ComplexStatisticsCard
                 icon="person"
                 title={monthVisitorTitle}
