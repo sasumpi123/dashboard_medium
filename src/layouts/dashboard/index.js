@@ -27,7 +27,7 @@ import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 
 // Data
 import getDefaultChartData from "layouts/dashboard/data/chartData"
-import useVisitorData from "hook/useVisitorData";
+import { useVisitorData, useNewUserData } from "hook/useVisitorData";
 
 import { getMonthStr, addComma } from "../../util/formatter"
 
@@ -35,10 +35,15 @@ function Dashboard() {
   const year = 2022
   const month = 11
   const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(year, month)
-  const defaultChartData = getDefaultChartData(totalVisitor);
   const visitorPercent = Math.round(targetMonthVisitor / lastMonthVisitor * 100);
+  const monthVisitorTitle = `"${getMonthStr(month)}" Visitors`
+
+  const { targetMonthNewUser, lastMonthNewUser } = useNewUserData(year, month)
+  const newUserPercent = Math.round(targetMonthNewUser / lastMonthNewUser * 100)
+  const monthNewUserTitle = `"${getMonthStr(month)}" New Users`
+
   const description = `Year ${year}`
-  const monthTitle = `"${getMonthStr(month)}" Visitors`
+  const defaultChartData = getDefaultChartData(totalVisitor);
 
   return (
     <DashboardLayout>
@@ -48,13 +53,13 @@ function Dashboard() {
           <Grid item lg={5}>
             <MDBox>
               <ComplexStatisticsCard
-                icon="leaderboard"
-                title={monthTitle}
+                icon="person"
+                title={monthVisitorTitle}
                 count={addComma(targetMonthVisitor)}
                 percentage={{
                   color: "success",
                   amount: `${visitorPercent}%`,
-                  label: "than last month",
+                  label: `than last month(${addComma(lastMonthVisitor)})`,
                 }}
               />
             </MDBox>
@@ -62,13 +67,13 @@ function Dashboard() {
           <Grid item lg={5}>
             <MDBox>
               <ComplexStatisticsCard
-                icon="leaderboard"
-                title={monthTitle}
-                count={addComma(targetMonthVisitor)}
+                icon="person_add"
+                title={monthNewUserTitle}
+                count={addComma(targetMonthNewUser)}
                 percentage={{
                   color: "success",
-                  amount: `${visitorPercent}%`,
-                  label: "than last month",
+                  amount: `${newUserPercent}%`,
+                  label: `than last month(${addComma(lastMonthNewUser)})`,
                 }}
               />
             </MDBox>
