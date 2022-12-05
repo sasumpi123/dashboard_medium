@@ -15,6 +15,8 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Grid from "@mui/material/Grid";
+import MDInput from "components/MDInput";
+import { useEffect, useState } from "react";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -32,23 +34,43 @@ import { useVisitorData, useNewUserData } from "hook/useVisitorData";
 import { getMonthStr, addComma } from "../../util/formatter"
 
 function Dashboard() {
-  const year = 2022
-  const month = 11
+  const now = new Date();
+  const [year, setYear] = useState(now.getFullYear())
+  const [month, setMonth] = useState(now.getMonth())
   const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(year, month)
   const visitorPercent = Math.round(targetMonthVisitor / lastMonthVisitor * 100);
   const monthVisitorTitle = `"${getMonthStr(month)}" Visitors`
 
   const { targetMonthNewUser, lastMonthNewUser } = useNewUserData(year, month)
-  const newUserPercent = Math.round(targetMonthNewUser / lastMonthNewUser * 100)
+  const newUserAmount = targetMonthNewUser - lastMonthNewUser
   const monthNewUserTitle = `"${getMonthStr(month)}" New Users`
 
   const description = `Year ${year}`
   const defaultChartData = getDefaultChartData(totalVisitor);
 
+
+  const [dateValue, setDateValue] = useState(`${year}-${month + 1}`)
+  useEffect(() => {
+    const [changeYear, changeMonth] = dateValue.split("-")
+    setYear(Number(changeYear))
+    setMonth(Number(changeMonth) - 1)
+  }, [dateValue])
+
+  const handleChange = (event) => {
+    const { value } = event.target
+    setDateValue(value)
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={2}>
+      <MDBox py={3}>
+        <Grid container spacing={2}>
+          <Grid item lg={5}>
+            <MDBox mb={4.5}>
+              <MDInput type="month" label="Month" value={dateValue} onChange={handleChange} />
+            </MDBox>
+          </Grid >
+        </Grid>
         <Grid container spacing={2}>
           <Grid item lg={5}>
             <MDBox>
@@ -72,7 +94,7 @@ function Dashboard() {
                 count={addComma(targetMonthNewUser)}
                 percentage={{
                   color: "success",
-                  amount: `${newUserPercent}%`,
+                  amount: `${newUserAmount}`,
                   label: `than last month(${addComma(lastMonthNewUser)})`,
                 }}
               />

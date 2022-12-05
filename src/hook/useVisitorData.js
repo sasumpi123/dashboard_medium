@@ -38,6 +38,7 @@ function useVisitorData(year, month) {
     return { totalVisitor, targetMonthVisitor, lastMonthVisitor }
 }
 
+
 function useNewUserData(year, month) {
     const [targetMonthNewUser, setTargetMonthNewUser] = useState(newUser[THISMONTH]);
     const [lastMonthNewUser, setLastMonthNewUser] = useState(getLastYearMonthData(year, THISMONTH, newUser));
