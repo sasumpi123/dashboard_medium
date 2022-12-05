@@ -29,7 +29,7 @@ import DefaultLineChart from "examples/Charts/LineCharts/DefaultLineChart";
 
 // Data
 import getDefaultChartData from "layouts/dashboard/data/chartData"
-import { useVisitorData, useNewUserData } from "hook/useVisitorData";
+import { useVisitorData, useNewUserData, useYearVisitorData } from "hook/useVisitorData";
 
 import { getMonthStr, addComma } from "../../util/formatter"
 
@@ -37,7 +37,7 @@ function Dashboard() {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
-  const { totalVisitor, targetMonthVisitor, lastMonthVisitor } = useVisitorData(year, month)
+  const { targetMonthVisitor, lastMonthVisitor } = useVisitorData(year, month)
   const visitorPercent = Math.round(targetMonthVisitor / lastMonthVisitor * 100);
   const monthVisitorTitle = `"${getMonthStr(month)}" Visitors`
 
@@ -45,21 +45,24 @@ function Dashboard() {
   const newUserAmount = targetMonthNewUser - lastMonthNewUser
   const monthNewUserTitle = `"${getMonthStr(month)}" New Users`
 
+  const { yearVisitor } = useYearVisitorData(year)
   const description = `Year ${year}`
-  const defaultChartData = getDefaultChartData(totalVisitor);
-
+  const defaultChartData = getDefaultChartData(yearVisitor);
 
   const [dateValue, setDateValue] = useState(`${year}-${month + 1}`)
+
+  const handleChange = (event) => {
+    const { value } = event.target
+    if (value !== "") setDateValue(value)
+
+  }
+
   useEffect(() => {
     const [changeYear, changeMonth] = dateValue.split("-")
     setYear(Number(changeYear))
     setMonth(Number(changeMonth) - 1)
   }, [dateValue])
 
-  const handleChange = (event) => {
-    const { value } = event.target
-    setDateValue(value)
-  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -67,37 +70,38 @@ function Dashboard() {
         <Grid container spacing={2}>
           <Grid item lg={5}>
             <MDBox mb={4.5}>
-              <MDInput type="month" label="Month" value={dateValue} onChange={handleChange} />
+              <MDInput type="month" label="Select" value={dateValue} onChange={handleChange} />
             </MDBox>
           </Grid >
         </Grid>
         <Grid container spacing={2}>
           <Grid item lg={5}>
             <MDBox>
-              <ComplexStatisticsCard
+              {console.log(targetMonthNewUser)}
+              {targetMonthNewUser !== undefined && <ComplexStatisticsCard
                 icon="person"
                 title={monthVisitorTitle}
                 count={addComma(targetMonthVisitor)}
                 percentage={{
                   color: "success",
-                  amount: `${visitorPercent}%`,
+                  amount: `${Number.isNaN(visitorPercent) ? 0 : visitorPercent}%`,
                   label: `than last month(${addComma(lastMonthVisitor)})`,
                 }}
-              />
+              />}
             </MDBox>
           </Grid>
           <Grid item lg={5}>
             <MDBox>
-              <ComplexStatisticsCard
+              {targetMonthNewUser !== undefined && <ComplexStatisticsCard
                 icon="person_add"
                 title={monthNewUserTitle}
                 count={addComma(targetMonthNewUser)}
                 percentage={{
                   color: "success",
                   amount: `${newUserAmount}`,
-                  label: `than last month(${addComma(lastMonthNewUser)})`,
+                  label: `more than last month(${addComma(lastMonthNewUser)})`,
                 }}
-              />
+              />}
             </MDBox>
           </Grid>
         </Grid>
