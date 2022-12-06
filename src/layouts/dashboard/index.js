@@ -75,7 +75,7 @@ function Dashboard() {
           </Grid >
         </Grid>
         <Grid container spacing={2}>
-          <Grid item lg={5}>
+          <Grid item lg={6} xs={12}>
             <MDBox>
               {targetMonthNewUser !== undefined && <ComplexStatisticsCard
                 icon="person"
@@ -89,7 +89,7 @@ function Dashboard() {
               />}
             </MDBox>
           </Grid>
-          <Grid item lg={5}>
+          <Grid item lg={6} xs={12}>
             <MDBox>
               {targetMonthNewUser !== undefined && <ComplexStatisticsCard
                 icon="person_add"
@@ -106,7 +106,7 @@ function Dashboard() {
         </Grid>
         <MDBox mt={4.5}>
           <Grid container>
-            <Grid item lg={10}>
+            <Grid item lg={12} xs={12}>
               <MDBox>
                 <DefaultLineChart
                   color="info"
